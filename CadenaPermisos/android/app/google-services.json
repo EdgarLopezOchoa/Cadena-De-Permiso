@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "730010325823",
+    "project_id": "cadena-de-permisos",
+    "storage_bucket": "cadena-de-permisos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730010325823:android:4be5f125359fd2407ff98a",
+        "android_client_info": {
+          "package_name": "com.example.cadenapermisos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyADzg6EWkzTNn-1hGfnpESmiuKEsVRV1bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
