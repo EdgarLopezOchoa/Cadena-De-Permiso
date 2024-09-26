@@ -10,9 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-
-
-
   runApp(Menu());
 }
 
@@ -55,9 +52,6 @@ class _MyWidgetState extends State<Inicio> {
     super.initState();
   }
 
-
-
-
   void ChagerPreferences() async {
     preferences = await SharedPreferences.getInstance();
   }
@@ -66,7 +60,6 @@ class _MyWidgetState extends State<Inicio> {
   Widget build(BuildContext context) {
     return Scaffold(body: Menu_Body());
   }
-
 
   void DialogAddTask() {
     showDialog(
@@ -161,6 +154,8 @@ class _MyWidgetState extends State<Inicio> {
                   String Description = data['Descripcion'];
                   String Autorizacion_1 = data['Autorizacion 1'];
                   String Autorizacion_2 = data['Autorizacion 2'];
+                  num Id_User = data["Id_User"];
+                  num Level_User = data["Level"];
 
                   Text Aut1 = Text("Autorizado Por: $Autorizacion_1");
                   Text Aut2 = Text("Autorizado Por: $Autorizacion_2");
@@ -176,43 +171,82 @@ class _MyWidgetState extends State<Inicio> {
                       "Autorizacion Gerencial Pendiente",
                       style: TextStyle(color: Colors.red),
                     );
+                    Autorizacion_2 = "";
                   }
 
-                  /*return ListTile(
-                    title: Text(Tittle, style: TextStyle(color: Colors.black)),
-                  );*/
 
-                  return Container(
-                    padding: EdgeInsets.only(
-                        left: 20, right: 20, top: 30, bottom: 20),
-                    child: Column(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Text(
-                            Tittle,
-                            style: TextStyle(
-                                fontFamily: "times",
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                  if (preferences!.getInt("Level_User")! >= Level_User &&
+                          Autorizacion_1 != "") {
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: 20, right: 20, top: 30, bottom: 20),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Text(
+                              Tittle,
+                              style: TextStyle(
+                                  fontFamily: "times",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Text(Description),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Aut1,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Aut2,
-                        ),
-                        ConfimButton(DocId),
-                      ],
-                    ),
-                  );
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Text(Description),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Aut1,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Aut2,
+                          ),
+                          ConfimButton(DocId),
+                        ],
+                      ),
+                    );
+                  } else if (preferences!.getInt("Id_User")!.toDouble() ==
+                          Id_User ||
+                      preferences!.getInt("Level_User")! >= Level_User &&
+                          preferences!.getInt("Level_User")! < 3) {
+                    print("noooooooo $Id_User   $DocId ");
+                    return Container(
+                      padding: EdgeInsets.only(
+                          left: 20, right: 20, top: 30, bottom: 20),
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Text(
+                              Tittle,
+                              style: TextStyle(
+                                  fontFamily: "times",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Text(Description),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Aut1,
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 10, bottom: 10),
+                            child: Aut2,
+                          ),
+                          ConfimButton(DocId),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
                 });
           } else {
             return const Text("No Task Yet");
@@ -232,7 +266,7 @@ class _MyWidgetState extends State<Inicio> {
                 preferences!.getString("User_Name").toString(),
                 preferences!.getInt("Level_User").toString());
           },
-          icon: const Icon(Icons.login),
+          icon: const Icon(Icons.check),
           label: const Text("Comfim Action",
               style: TextStyle(
                   fontSize: 18, fontFamily: "Times ", color: Colors.black87)),

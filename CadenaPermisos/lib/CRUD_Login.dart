@@ -12,21 +12,26 @@ class FireStoreServices{
 
   //Create user
   Future<void> CreateTask(String Tittle,String Descripcion,String Name){
+    ChagerPreferences();
 
     if(preferences?.getInt("Level_User") == 2){
       return TaskCreate.add({
         "Tittle": Tittle,
         "Descripcion":Descripcion,
         "Autorizacion 1": Name,
-        "Autorizacion 2": ""
+        "Autorizacion 2": "",
+        "Id_User": preferences?.getInt("Id_User"),
+        "Level": preferences?.getInt("Level_User")
       });
 
     }else if(preferences?.getInt("Level_User") == 3){
       return TaskCreate.add({
         "Tittle": Tittle,
         "Descripcion":Descripcion,
-        "Autorizacion 1": "",
-        "Autorizacion 2": Name
+        "Autorizacion 1": "No Requerido",
+        "Autorizacion 2": Name,
+        "Id_User": preferences?.getInt("Id_User"),
+        "Level": preferences?.getInt("Level_User")
       });
     }
 
@@ -34,7 +39,9 @@ class FireStoreServices{
         "Tittle": Tittle,
         "Descripcion":Descripcion,
         "Autorizacion 1": "",
-        "Autorizacion 2": ""
+        "Autorizacion 2": "",
+        "Id_User": preferences?.getInt("Id_User"),
+        "Level": preferences?.getInt("Level_User")
       });
 
   }
