@@ -1,10 +1,11 @@
-import 'dart:math';
 import 'package:cadenapermisos/CRUD_Login.dart';
 import 'package:cadenapermisos/Menu.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,6 @@ class MiApp extends StatelessWidget {
       home: Inicio(),
     );
   }
-
 }
 
 class Inicio extends StatefulWidget {
@@ -40,34 +40,48 @@ class Inicio extends StatefulWidget {
 }
 
 class _MyWidgetState extends State<Inicio> {
-  final FireStoreServices auth = FireStoreServices();
+  SharedPreferences? preferences;
 
   FireStoreServices fireStoreServices = FireStoreServices();
   final TextEditingController nameText = TextEditingController();
   final TextEditingController passwordText = TextEditingController();
+  final firebase_auth.FirebaseAuth aunth = FirebaseAuth.instance;
+
+  var isObscure = true;
 
   @override
   void initState() {
-    super.initState();
+    ChagerPreferences();
 
-    getUser();
+    super.initState();
   }
+
+  void ChagerPreferences() async {
+    preferences = await SharedPreferences.getInstance();
+  }
+
+  void getUser() async {
+    firebase_auth.User? user = aunth.currentUser;
+    String? id = user?.uid;
+
+    DocumentSnapshot snapshot =
+    await FirebaseFirestore.instance.collection("users").doc(id).get();
+
+    if (snapshot.exists) {
+      preferences?.setInt("Level_User", snapshot.get("Level"));
+      preferences?.setInt("Id_User", snapshot.get("Id"));
+      preferences?.setString("User_Name", snapshot.get("Name"));
+
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Login_Body());
   }
 
-  void getUser() async {
-    CollectionReference collectionReference =
-    FirebaseFirestore.instance.collection("users");
-    QuerySnapshot users = await collectionReference.get();
-    if (users.docs.isNotEmpty) {
-      for (var doc in users.docs) {
-        print(doc.data());
-      }
-    }
-  }
+
 
   Widget Login_Body() {
     return Container(
@@ -102,7 +116,10 @@ class _MyWidgetState extends State<Inicio> {
       ),
       child: Center(
         child: Column(
-          children: <Widget>[Texts("LOGIN", 30.0), User(),],
+          children: <Widget>[
+            Texts("LOGIN", 30.0),
+            User(),
+          ],
         ),
       ),
     );
@@ -117,6 +134,7 @@ class _MyWidgetState extends State<Inicio> {
             Email(),
             Password(),
             SignUp_Button(),
+
           ],
         ),
       ),
@@ -133,46 +151,55 @@ class _MyWidgetState extends State<Inicio> {
         ));
   }
 
-  Widget Email(){
+  Widget Email() {
     return Container(
-      padding:
-      const EdgeInsets.only(left: 0, right: 0, top: 20, bottom: 0),
-      child: TextField(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
+      child: TextFormField(
         controller: nameText,
-        decoration: InputDecoration(
-            hintText: "Usuario",
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(width: 3, color: Colors.red),
-              borderRadius: BorderRadius.circular(15),
-            )),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          hintText: "E-mail",
+        ),
       ),
     );
   }
 
-  Widget Password(){
+  Widget Password() {
     return Container(
-      padding:
-      const EdgeInsets.only(left: 0, right: 0, top: 20, bottom: 0),
-      child: TextField(
-        controller: passwordText,
-        decoration: InputDecoration(
+      margin: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey),
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
+      child: TextFormField(
+          obscureText: isObscure,
+          controller: passwordText,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+                onPressed: () {
+                  setState(() {
+                    isObscure = !isObscure;
+                  });
+                },
+                icon: isObscure
+                    ? const Icon(Icons.visibility)
+                    : const Icon(Icons.visibility_off)),
             hintText: "Contraseña",
-            fillColor: Colors.white,
-            filled: true,
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(width: 3, color: Colors.red),
-              borderRadius: BorderRadius.circular(15),
-            )),
-      ),
+            border: InputBorder.none,
+          )),
     );
   }
 
-Widget SignUp_Button(){
+  Widget SignUp_Button() {
     return Container(
-      padding:
-      const EdgeInsets.only(left: 0, right: 0, top: 20, bottom: 10),
+      padding: const EdgeInsets.only(left: 0, right: 0, top: 20, bottom: 10),
       child: ElevatedButton.icon(
         onPressed: SignUp,
         icon: const Icon(Icons.login),
@@ -181,16 +208,21 @@ Widget SignUp_Button(){
                 fontSize: 18, fontFamily: "Times ", color: Colors.red)),
       ),
     );
-}
+  }
+
 
 
   void SignUp() async {
+    firebase_auth.User? user =
+    await fireStoreServices.SignIn(nameText.text, passwordText.text);
 
-    firebase_auth.User? user = await auth.SignIn(nameText.text,passwordText.text);
-
-    if(user != null){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Menu()));
+    if (user != null) {
+      preferences?.setString("Email", nameText.text);
+      getUser();
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Menu()));
     }
-
   }
+
+
 }
