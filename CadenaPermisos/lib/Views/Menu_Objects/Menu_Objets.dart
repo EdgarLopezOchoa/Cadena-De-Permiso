@@ -40,23 +40,39 @@ class Menu_Objets extends StatefulWidget {
           num Id_User = data["Id_User"];
           num Level_User = data["Level"];
 
-          //Validation Authorization
-          Container Aut1 = TextCards(
-              "Autorizado Por: $Autorizacion_1", "times", FontWeight.bold, 14);
-          Container Aut2 = TextCards(
-              "Autorizado Por: $Autorizacion_2", "times", FontWeight.bold, 14);
+          Container Aut1;
+          Container Aut2;
 
-          Color colors = AppThemes.colors.GreenCardAccent;
+          Color colors = AppThemes.colors.white;
+          //Validation Authorization
+
+          Aut1 = TextCards(
+              "", "times", FontWeight.bold, 14, Colors.orange, colors);
+          Aut2 = TextCards(
+              "", "times", FontWeight.bold, 14, Colors.orange, colors);
 
           if (Autorizacion_1 == "") {
-            Aut1 = TextCards(
-                "Autorizacion De Area Pendiente", "times", FontWeight.bold, 14);
             colors = AppThemes.colors.RedCard;
+            Aut1 = TextCards("Autorizacion De Area Pendiente", "times",
+                FontWeight.bold, 14, Colors.red, colors);
+          } else {
+            Aut1 = TextCards("Autorizado Por: $Autorizacion_1", "times",
+                FontWeight.bold, 14, Colors.black, colors);
           }
           if (Autorizacion_2 == "") {
-            Aut2 = TextCards("Autorizacion Gerencial Pendiente", "times",
-                FontWeight.bold, 14);
             colors = AppThemes.colors.RedCard;
+            Aut2 = TextCards("Autorizacion Gerencial Pendiente", "times",
+                FontWeight.bold, 14, Colors.red, colors);
+          } else {
+            Aut2 = TextCards("Autorizado Por: $Autorizacion_2", "times",
+                FontWeight.bold, 14, Colors.black, colors);
+          }
+
+          if (colors == AppThemes.colors.white) {
+            Aut1 = TextCards("Autorizado Por: $Autorizacion_1", "times",
+                FontWeight.bold, 14, Colors.orange, colors);
+            Aut2 = TextCards("Autorizado Por: $Autorizacion_2", "times",
+                FontWeight.bold, 14, Colors.orange, colors);
           }
 
           if (preferences!.getInt("Level_User")! >= Level_User &&
@@ -92,35 +108,47 @@ class Menu_Objets extends StatefulWidget {
       padding: EdgeInsets.only(left: 5, right: 5, top: 0, bottom: 10),
       margin: EdgeInsets.only(left: 5, right: 5, top: 10, bottom: 0),
       child: Card(
+        elevation: 3,
         color: CardColor,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.1,
-                margin: EdgeInsets.only(
-                    left: MediaQuery.of(context).size.width * 0.8, top: 0),
-                child: TextButton(
-                  onPressed: () {
-                    fireStoreServices.DeleteTask(DocId);
-                  },
-                  child: Image.asset(
-                    "assets/image/xicon.png",
-                  ),
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextCards(Tittle, "times", FontWeight.bold, 24, Colors.blue,
+                        CardColor),
+                    Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        child: TextButton(
+                          onPressed: () {
+                            fireStoreServices.DeleteTask(DocId);
+                          },
+                          child: Image.asset(
+                            "assets/image/xicon.png",
+                          ),
+                        )),
+                  ],
                 )),
-            Container(child: TextCards(Tittle, "times", FontWeight.bold, 22)),
             Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-              child: TextCards(Description, "arial", FontWeight.normal, 16),
+
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextCards(Description, "arial", FontWeight.bold, 16,
+                  Colors.black, CardColor),
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
+              margin: EdgeInsets.only(top: 5),
+              padding: EdgeInsets.symmetric(horizontal: 15),
               child: Aut1,
             ),
             Container(
-              margin: EdgeInsets.only(top: 10, bottom: 10),
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              margin: EdgeInsets.only(top: 5),
               child: Aut2,
             ),
             buttonsWidgets.ConfimButton(DocId, preferences!),
@@ -131,12 +159,19 @@ class Menu_Objets extends StatefulWidget {
   }
 
   TextCards(String Tittle, String FontFamily, FontWeight fontWeight,
-      double fontsize) {
+      double fontsize, Color color, Color CardColor) {
+    if (CardColor == AppThemes.colors.RedCard) {
+      color = Colors.black;
+    }
+
     return Container(
       child: Text(
         Tittle,
         style: TextStyle(
-            fontFamily: FontFamily, fontWeight: fontWeight, fontSize: fontsize),
+            fontFamily: FontFamily,
+            fontWeight: fontWeight,
+            fontSize: fontsize,
+            color: color),
       ),
     );
   }

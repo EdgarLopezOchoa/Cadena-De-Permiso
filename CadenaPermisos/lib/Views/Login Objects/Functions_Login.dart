@@ -43,6 +43,7 @@ class Functions_Login extends StatefulWidget {
   }
 
    SignUp( BuildContext context, TextEditingController nameText, TextEditingController passwordText) async {
+     ChagerPreferences();
     firebase_auth.User? user =
     await fireStoreServices.SignIn(nameText.text, passwordText.text);
 
