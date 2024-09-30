@@ -7,5 +7,6 @@ class AppColors{
   final GreenCardAccent = const Color(0xff8df696);
   final white = const Color(0xffffffff);
   final Blue = const Color(0xff0045fd);
+  final Gold = const Color(0xffffee54);
   const AppColors();
 }

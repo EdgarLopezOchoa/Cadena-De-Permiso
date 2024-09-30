@@ -52,7 +52,7 @@ class Menu_Objets extends StatefulWidget {
               "", "times", FontWeight.bold, 14, Colors.orange, colors);
 
           if (Autorizacion_1 == "") {
-            colors = AppThemes.colors.RedCard;
+            colors = AppThemes.colors.Gold;
             Aut1 = TextCards("Autorizacion De Area Pendiente", "times",
                 FontWeight.bold, 14, Colors.red, colors);
           } else {
@@ -60,7 +60,7 @@ class Menu_Objets extends StatefulWidget {
                 FontWeight.bold, 14, Colors.black, colors);
           }
           if (Autorizacion_2 == "") {
-            colors = AppThemes.colors.RedCard;
+            colors = AppThemes.colors.Gold;
             Aut2 = TextCards("Autorizacion Gerencial Pendiente", "times",
                 FontWeight.bold, 14, Colors.red, colors);
           } else {
@@ -115,28 +115,29 @@ class Menu_Objets extends StatefulWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.1,
+                    child: TextButton(
+                      onPressed: () {
+                        fireStoreServices.DeleteTask(DocId);
+                      },
+                      child: Image.asset(
+                        "assets/image/xicon.png",
+                      ),
+                    )),
+                buttonsWidgets.ConfimButton(DocId, preferences!, context),
+              ],
+            ),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextCards(Tittle, "times", FontWeight.bold, 24, Colors.blue,
-                        CardColor),
-                    Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.1,
-                        child: TextButton(
-                          onPressed: () {
-                            fireStoreServices.DeleteTask(DocId);
-                          },
-                          child: Image.asset(
-                            "assets/image/xicon.png",
-                          ),
-                        )),
-                  ],
-                )),
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: TextCards(
+                  Tittle, "times", FontWeight.bold, 22, Colors.blue, CardColor),
+            ),
             Container(
-
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: TextCards(Description, "arial", FontWeight.bold, 16,
                   Colors.black, CardColor),
@@ -147,11 +148,10 @@ class Menu_Objets extends StatefulWidget {
               child: Aut1,
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: EdgeInsets.only(bottom: 15,left: 15,right: 15),
               margin: EdgeInsets.only(top: 5),
               child: Aut2,
             ),
-            buttonsWidgets.ConfimButton(DocId, preferences!),
           ],
         ),
       ),
