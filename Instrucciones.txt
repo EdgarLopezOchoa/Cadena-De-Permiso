@@ -1,0 +1,11 @@
+INTRUCCIONES DE USO
+
+La aplicación consta de 3 niveles de autorización, los usuarios de nivel 1 son los empleados de mas bajo rango, donde al realizar una petición esta sera visible para ellos y su respectivo jefe de ese area que son los usuarios de nivel 2, los usuarios de nivel 2 pueden ver sus propias peticiones (que no son visibles para los usuarios nivel 1) y que puede autorizar las peticiones de los usuarios de su area de menor nivel, los usuarios de nivel 3 puede ver todas las peticiones para su autorización final (y financiamiento en caso de ser requerido) siempre y cuando estas ya hayan sido autorizadas por el jefe de ese respectivo area (usuario nivel 2).
+
+USUARIOS DE PRUEBA
+
+Usuario Nivel 1: maubeto@gmail.com	
+Usuario Nivel 2: CarlosTL@gmail.com
+Usuario Nivel 3: Brayan123@gmail.com	
+
+Contraseña de todos los usuarios: 123456
